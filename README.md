@@ -31,7 +31,7 @@ With the use of machine learning models written in Python and used by our web ap
 #### `Step 1` - Clone the repo
 
 ```bash
-$ git clone https://github.com/RamziMuhammad/SFE-Recruitment-System
+$ git clone https://github.com/Mariam-Fathi/SFE-Recruitment-System.git
 ```
 
 #### `Step 2` - CD to the repo
