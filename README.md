@@ -1,59 +1,21 @@
-<div>
-  <h1>
-    SFE-Recruitment-System 
-    <img src="<img src=https://github.com/RamziMuhammad/SFE-Recruitment-System/blob/main/statics/assets/img/SFE-RS.png" width="40px" />
-  </h1>
-</div>
+# Automated Predictive Analysis of Personal Characteristics from Multimodal Video
 
-With the use of machine learning models written in Python and used by our web application, the straightforward recruitment system aids each applicant and HR in determining personality traits:
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
+![Machine Learning](https://img.shields.io/badge/Machine-Learning-orange)
+![Deep Learning](https://img.shields.io/badge/Deep-Learning-red)
+![Multimodal Fusion](https://img.shields.io/badge/Multimodal-Fusion-green)
+![Web App](https://img.shields.io/badge/Web-Application-lightgrey)
 
-- Openness
-- Conscientiousness
-- Extraversion
-- Agreeableness
-- Neuroticism
+This repository contains the code and documentation for our Bachelor's graduation project in Computer Systems Engineering. The project aims to automate the analysis of a job candidate's personality traits (based on the Big Five model: Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) by processing short self-presentation videos using multimodal deep learning techniques.
 
+## 🎯 Project Overview
 
-## Our App Architecture
+Employers often face the challenge of efficiently screening candidates. This system streamlines the pre-employment process by automatically predicting a candidate's personality scores from a short video. It extracts and analyzes visual (facial expressions, action units), auditory (voice prosody), and textual (speech content) cues, then fuses these modalities to generate a final, robust prediction.
 
-<div align="center">
-  <img src="https://github.com/Mariam-Fathi/SFE-Recruitment-System/blob/main/statics/assets/img/Web-App-Architecture.png" style="width:800px;"/>
-</div>
+**Key Features:**
+- **Multimodal Processing:** Independently processes video, audio, and text from a single video input.
+- **Advanced ML Models:** Implements and compares models like LSTNet, TCN, MLP, XGBoost, and ensemble methods.
+- **Feature Engineering:** Utilizes VGG-Face, OpenFace, PyAudioAnalysis, and BERT for state-of-the-art feature extraction.
+- **Web Application:** A full-stack web app (Node.js, Express, MongoDB) for users to upload videos and view results.
+- **Data Balancing:** Addresses imbalanced regression using innovative oversampling techniques.
 
-## Requirement
-
-- <a href="https://nodejs.org/en">**Node.js**</a>
-
----
-
-## Installation
-
-#### `Step 1` - Clone the repo
-
-```bash
-$ git clone https://github.com/Mariam-Fathi/SFE-Recruitment-System.git
-```
-
-#### `Step 2` - CD to the repo
-
-```bash
-$ cd SFE-Recruitment-System
-```
-
-#### `Step 3` - Install dependencies
-
-```bash
-$ npm install
-```
-
-#### `Step 4` - Run application
-
-```bash
-$ npm start
-```
-
-In Browser, **Open** [http://localhost:3000/sfe-rs/](http://localhost:3000/sfe-rs/)
-
-<div align="center">
-  <sub>If you found a bug or some improvments, feel free to raise an issue and send me!</sub>
-</div>
