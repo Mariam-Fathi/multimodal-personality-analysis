@@ -19,3 +19,11 @@ Employers often face the challenge of efficiently screening candidates. This sys
 - **Web Application:** A full-stack web app (Node.js, Express, MongoDB) for users to upload videos and view results.
 - **Data Balancing:** Addresses imbalanced regression using innovative oversampling techniques.
 
+## 📊 Results Summary (Mean Absolute Error - MAE)
+
+| Modality | Openness | Conscientiousness | Extraversion | Agreeableness | Neuroticism | Average |
+|:--------:|:--------:|:-----------------:|:------------:|:-------------:|:-----------:|:-------:|
+| **Video** | 0.0064 | 0.0074 | 0.0080 | 0.0059 | 0.0078 | 0.0071 |
+| **Audio** | 0.0016 | 0.0013 | 0.0013 | 0.0012 | 0.0012 | 0.0013 |
+| **Text** | 0.0461 | 0.0511 | 0.0477 | 0.0460 | 0.0530 | 0.0489 |
+| **Fusion** | **0.1230** | **0.1339** | **0.1333** | **0.1227** | **0.1222** | **0.1270** |
