@@ -1,57 +1,30 @@
-const express = require("express"),
-  adminRouter = express.Router();
-
+const express = require("express");
 const path = require("path");
-const directoryPath = path.dirname(require.main.filename);
-adminRouter.use(express.static(path.join(directoryPath, "statics")));
+const adminRouter = express.Router();
 
-const { isAuthorizedUser } = require("../middlewares/checkRole"),
-  currentUser = require("../middlewares/current-user"),
-  requireAuth = require("../middlewares/require-auth");
+const { isAuthorizedUser } = require("../middlewares/checkRole");
+const currentUser = require("../middlewares/current-user");
+const requireAuth = require("../middlewares/require-auth");
 
 const {
-  getAllApplicants,
-  getApplicant,
-  deleteAllApplicants,
-  deleteApplicant,
+    getAllApplicants,
+    getApplicant,
+    deleteAllApplicants,
+    deleteApplicant,
 } = require("../controllers/adminController");
 
+const staticPath = path.join(process.mainModule.path, "statics");
+adminRouter.use(express.static(staticPath));
+
 adminRouter.get("/administration", (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/administration.html"));
+    res.sendFile(path.join(__dirname, "../views/administration.html"));
 });
 
-adminRouter.get(
-  "/applicants",
-  // currentUser,
-  // requireAuth,
-  // isAuthorizedUser(),
-  getAllApplicants
-);
+const authMiddleware = [currentUser, requireAuth, isAuthorizedUser()];
 
-adminRouter.get(
-  "/applicant/:id",
-  currentUser,
-  requireAuth,
-  isAuthorizedUser(),
-  getApplicant
-);
+adminRouter.get("/applicants", getAllApplicants); // Removed auth temporarily for testing
+adminRouter.get("/applicant/:id", ...authMiddleware, getApplicant);
+adminRouter.delete("/applicants", ...authMiddleware, deleteAllApplicants);
+adminRouter.delete("/applicant/:id", ...authMiddleware, deleteApplicant);
 
-adminRouter.delete(
-  "/applicants",
-  currentUser,
-  requireAuth,
-  isAuthorizedUser(),
-  deleteAllApplicants
-);
-
-adminRouter.delete(
-  "/applicant/:id",
-  currentUser,
-  requireAuth,
-  isAuthorizedUser(),
-  deleteApplicant
-);
-
-module.exports = {
-  adminRouter,
-};
+module.exports = { adminRouter };
