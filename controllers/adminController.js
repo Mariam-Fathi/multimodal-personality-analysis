@@ -1,95 +1,111 @@
-const { User } = require("../models/user"),
-  dotenv = require("dotenv");
+const { User } = require("../models/user");
 
-dotenv.config();
+// Constants
+const APPLICANT_ROLE = "applicant";
+const ADMIN_ROLE = "admin";
+
+const handleError = (res, error, customMessage = "An error occurred") => {
+    console.error(error);
+    res.status(400).json({
+        status: "failed",
+        message: customMessage,
+    });
+};
 
 const getAllApplicants = async (req, res) => {
-  try {
-    const existingApplicants = await User.find({ role: "applicant" });
+    try {
+        const existingApplicants = await User.find({ role: APPLICANT_ROLE }).lean();
 
-    if (existingApplicants.length == 0) {
-      res.status(400).json({
-        status: "failed",
-        message: `No existing applicants to be shown!`,
-      });
-    } else {
-      res.status(200).send(existingApplicants);
+        if (!existingApplicants.length) {
+            return res.status(404).json({
+                status: "failed",
+                message: "No applicants found",
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            data: existingApplicants,
+            count: existingApplicants.length,
+        });
+    } catch (error) {
+        handleError(res, error, "Failed to fetch applicants");
     }
-  } catch (error) {
-    res.status(400).send(error);
-  }
 };
 
 const getApplicant = async (req, res) => {
-  try {
-    const applicant = await User.findById(req.params.id);
+    try {
+        const applicant = await User.findById(req.params.id).lean();
 
-    res.status(200).send(applicant);
-  } catch (error) {
-    res.status(400).json({
-      status: "failed",
-      message: `No existing applicant with the given ID!`,
-    });
-  }
+        if (!applicant) {
+            return res.status(404).json({
+                status: "failed",
+                message: "Applicant not found",
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            data: applicant,
+        });
+    } catch (error) {
+        handleError(res, error, "Invalid applicant ID");
+    }
 };
 
 const deleteAllApplicants = async (req, res) => {
-  try {
-    const existingApplicants = await User.find({ role: "applicant" });
+    try {
+        const result = await User.deleteMany({ role: APPLICANT_ROLE });
 
-    if (existingApplicants.length == 0) {
-      res.status(400).json({
-        status: "failed",
-        message: `No existing applicants to be deleted!`,
-      });
-    } else {
-      await User.deleteMany({ role: "applicant" });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                status: "failed",
+                message: "No applicants found to delete",
+            });
+        }
 
-      if (existingApplicants.length == 1) {
         res.status(200).json({
-          status: "success",
-          message: `Only one applicant deleted sucessfully.`,
+            status: "success",
+            message: `Successfully deleted ${result.deletedCount} applicant(s)`,
+            deletedCount: result.deletedCount,
         });
-      } else {
-        res.status(200).json({
-          status: "success",
-          message: `There are ${existingApplicants.length} applicants deleted sucessfully.`,
-        });
-      }
+    } catch (error) {
+        handleError(res, error, "Failed to delete applicants");
     }
-  } catch (error) {
-    res.status(400).send(error);
-  }
 };
 
 const deleteApplicant = async (req, res) => {
-  try {
-    const applicant = await User.findById(req.params.id);
-    if (applicant.role === "admin") {
-      res.status(400).json({
-        status: "success",
-        message: `Cannot delete an admin!`,
-      });
-    } else {
-      const applicantName = applicant.name;
+    try {
+        const applicant = await User.findById(req.params.id);
 
-      await User.deleteOne(applicant);
-      res.status(200).json({
-        status: "success",
-        message: `${applicantName} was deleted successfully.`,
-      });
+        if (!applicant) {
+            return res.status(404).json({
+                status: "failed",
+                message: "Applicant not found",
+            });
+        }
+
+        if (applicant.role === ADMIN_ROLE) {
+            return res.status(403).json({
+                status: "failed",
+                message: "Cannot delete an admin user",
+            });
+        }
+
+        await User.deleteOne({ _id: req.params.id });
+
+        res.status(200).json({
+            status: "success",
+            message: `${applicant.name} was deleted successfully`,
+        });
+    } catch (error) {
+        handleError(res, error, "Invalid applicant ID");
     }
-  } catch (error) {
-    res.status(400).json({
-      status: "success",
-      message: `Invalid ID!`,
-    });
-  }
 };
 
 module.exports = {
-  getAllApplicants,
-  getApplicant,
-  deleteApplicant,
-  deleteAllApplicants,
+    getAllApplicants,
+    getApplicant,
+    deleteApplicant,
+    deleteAllApplicants,
 };
