@@ -1,0 +1,12 @@
+# Minimal deps for Traits-Prediction.py (fusion-only path)
+numpy>=1.20
+xgboost>=1.5
+
+# Required if fusion_scaler.pkl or text_scaler.pkl is used
+scikit-learn>=1.0
+
+# Required for full pipeline (LSTNet + feature extraction), when added
+# torch>=1.9
+# transformers  # BERT text
+# pyAudioAnalysis  # audio features
+# openface / dlib  # video action units
