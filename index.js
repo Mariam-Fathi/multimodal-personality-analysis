@@ -1,13 +1,13 @@
-const mongoose = require("mongoose"),
-  { app } = require("./app.js"),
-  url = "mongodb://127.0.0.1:27017/SFE-RS";
-const PORT = process.env.PORT || 3000;
+require("dotenv").config();
+const mongoose = require("mongoose");
+const { app } = require("./app.js");
 
-const path = require("path");
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/SFE-RS";
 
 app.listen(PORT, async () => {
   await mongoose
-    .connect(url, {}) // The second parameter is for the security profitable update
-    .then((result) => console.log(`Listening on port ${PORT} ...`))
-    .catch((err) => console.log(err));
+    .connect(MONGODB_URI)
+    .then(() => console.log(`Listening on port ${PORT} ...`))
+    .catch((err) => console.error("MongoDB connection error:", err));
 });

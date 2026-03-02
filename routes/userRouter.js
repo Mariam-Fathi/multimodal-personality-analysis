@@ -16,6 +16,7 @@ userRouter.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../views/home.html"));
 });
 
+userRouter.get("/registration", (req, res) => res.redirect(302, "/sfe-rs/registration/"));
 userRouter.get("/registration/", (req, res) => {
     res.sendFile(path.join(__dirname, "../views/registration.html"));
 });

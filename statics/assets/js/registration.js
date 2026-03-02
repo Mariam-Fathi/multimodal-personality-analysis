@@ -23,26 +23,23 @@ const signIn = async () => {
   };
 
   try {
-    const response = await fetch(
-      "http://localhost:3000/sfe-rs/registration/signin/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch("/sfe-rs/registration/signin/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
     const responseData = await response.json();
-    if (response.ok) {
+    if (response.ok && responseData.status === "success") {
       sessionStorage.setItem("role", responseData.role);
       sessionStorage.setItem("registrationStatus", "signedIn");
-      window.location.href = "./";
+      window.location.href = "/sfe-rs/";
     } else {
-      alert(responseData.message);
+      const msg = responseData.errors?.[0]?.message || responseData.message || "Sign-in failed.";
+      alert(msg);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    alert("Sign-in failed.");
   }
 };
 
@@ -73,25 +70,21 @@ const signUp = async () => {
   };
 
   try {
-    const response = await fetch(
-      "http://localhost:3000/sfe-rs/registration/signup/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch("/sfe-rs/registration/signup/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
     const responseData = await response.json();
-    if (response.ok) {
-      window.location.href = "./";
+    if (response.ok && responseData.status === "success") {
+      window.location.href = "/sfe-rs/";
     } else {
-      alert(responseData.message);
-      throw new Error("Error: " + responseData.message);
+      const msg = responseData.errors?.[0]?.message || responseData.message || "Sign-up failed.";
+      alert(msg);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    alert("Sign-up failed.");
   }
 };
 
@@ -100,10 +93,10 @@ signUpForm.addEventListener("submit", (e) => {
   signUp();
 });
 
-function signOut() {
-  // Clear any session-specific data stored in sessionStorage
+async function signOut() {
   sessionStorage.clear();
-  const response = fetch("http://localhost:3000/sfe-rs/signout", {
-    method: "POST",
-  });
+  try {
+    await fetch("/sfe-rs/signout/", { method: "POST", credentials: "same-origin" });
+  } catch (e) {}
+  window.location.href = "/sfe-rs/";
 }

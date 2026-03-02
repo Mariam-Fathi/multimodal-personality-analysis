@@ -1,9 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 require("express-async-errors");
 
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
-const cors = require("cors");
 
 const errorHandler = require("./middlewares/error-handler");
 const NotFoundError = require("./errors/not-found-error");
@@ -17,12 +17,12 @@ app.use(cookieParser());
 app.use(
   cookieSession({
     name: "sessionIdCookie",
-    secret: "thisshouldbeasecret",
+    secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true, // Cookie is only accessible over HTTP, requires HTTPS
+      secure: process.env.NODE_ENV === "production",
     },
   })
 );
@@ -38,9 +38,11 @@ app.use("/sfe-rs/", userRouter);
 app.use("/sfe-rs/admin/", adminRouter);
 app.use("/sfe-rs/applicant/", applicantRouter);
 
-// app.all("*", async (req, res) => {
-//   throw new NotFoundError();
-// });
+app.all("*", async (req, res) => {
+  throw new NotFoundError();
+});
+
+app.use(errorHandler);
 
 module.exports = {
   app,

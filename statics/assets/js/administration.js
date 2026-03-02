@@ -18,21 +18,17 @@ const listApplicantsForm = document.getElementById("listApplicants");
 
 const listApplicants = async () => {
   try {
-    const response = await fetch(
-      "http://localhost:3000/sfe-rs/admin/applicants",
-      {
-        method: "GET",
-      }
-    );
+    const response = await fetch("/sfe-rs/admin/applicants", {
+      method: "GET",
+      credentials: "same-origin",
+    });
     const responseData = await response.json();
-    if (response.ok) {
+    if (response.ok && responseData.status === "success" && Array.isArray(responseData.data)) {
       var tableContainer = document.getElementById("table-container");
-      if ((tableContainer.style.display = "none")) {
-        tableContainer.style.display = "block"; // Show the section
-      }
+      tableContainer.style.display = "block";
       $("#tableRow").detach();
       const tableBody = $("#tableBody");
-      responseData.forEach((row) => {
+      responseData.data.forEach((row) => {
         tableBody.append(`
             <tr id="tableRow">
               <td>${row._id}</td>
@@ -51,10 +47,12 @@ const listApplicants = async () => {
         pagingType: "full_numbers",
       });
     } else {
-      alert(responseData.message);
+      const msg = responseData.errors?.[0]?.message || responseData.message || "Request failed.";
+      alert(msg);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    alert("Request failed.");
   }
 };
 
@@ -70,14 +68,12 @@ const deleteApplicantsForm = document.getElementById("deleteApplicants");
 
 const deleteAllApplicants = async () => {
   try {
-    const response = await fetch(
-      "http://localhost:3000/sfe-rs/admin/applicants",
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch("/sfe-rs/admin/applicants", {
+      method: "DELETE",
+      credentials: "same-origin",
+    });
     const responseData = await response.json();
-    if (response.ok) {
+    if (response.ok && responseData.status === "success") {
       alert(`All applicants deleted.`);
       location.reload();
     } else {
@@ -101,18 +97,12 @@ const deleteOneApplicantForm = document.getElementById("deleteOne");
 const deleteOneApplicant = async () => {
   const appId = document.getElementById("appId").value;
   try {
-    const response = await fetch(
-      `http://localhost:3000/sfe-rs/admin/applicant/${appId}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`/sfe-rs/admin/applicant/${appId}`, {
+      method: "DELETE",
+      credentials: "same-origin",
+    });
     const responseData = await response.json();
-    if (response.ok) {
-      alert(responseData.message);
-    } else {
-      alert(responseData.message);
-    }
+    alert(responseData.message || (response.ok ? "Deleted." : "Failed."));
   } catch (error) {
     console.log(error);
   }

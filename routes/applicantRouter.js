@@ -14,6 +14,7 @@ const applicantRouter = express.Router();
 const staticPath = path.join(path.dirname(require.main.filename), "statics");
 applicantRouter.use(express.static(staticPath));
 
+applicantRouter.get("/upload-video", (req, res) => res.redirect(302, "/sfe-rs/applicant/upload-video/"));
 applicantRouter.get("/upload-video/", (req, res) => {
     res.sendFile(path.join(__dirname, "../views/uploadVideo.html"));
 });

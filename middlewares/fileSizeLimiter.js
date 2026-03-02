@@ -1,15 +1,18 @@
 const MB = 10; // 10 MB
-const FILE_SIZE_LIMIT = MB * 1024 * 1024; // We use uppercase letters to refer it as a cnostant
+const FILE_SIZE_LIMIT = MB * 1024 * 1024; // We use uppercase letters to refer it as a constant
 
 const fileSizeLimiter = (req, res, next) => {
   const files = req.files;
-
   const filesOverLimit = [];
-  // Which files are over the limit?
+
   Object.keys(files).forEach((key) => {
-    if (files[key].length > FILE_SIZE_LIMIT) {
-      filesOverLimit.push(files[key].name);
-    }
+    const fileOrList = files[key];
+    const list = Array.isArray(fileOrList) ? fileOrList : [fileOrList];
+    list.forEach((file) => {
+      if (file.size > FILE_SIZE_LIMIT) {
+        filesOverLimit.push(file.name);
+      }
+    });
   });
 
   if (filesOverLimit.length) {

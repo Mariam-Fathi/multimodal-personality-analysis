@@ -20,21 +20,25 @@ const uploadVideo = async () => {
     }
   }
 
-  const response = await fetch(
-    "http://localhost:3000/sfe-rs/applicant/upload-video",
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
+  const response = await fetch("/sfe-rs/applicant/upload-video", {
+    method: "POST",
+    body: formData,
+  });
   const personalityTraits = await response.json();
+
+  waitingContainer.style.display = "none";
+  uploadingContainer.style.display = "block";
+
+  if (!response.ok || personalityTraits.status !== "success") {
+    const msg = personalityTraits.message || "Upload or analysis failed.";
+    alert(msg);
+    return;
+  }
+
   try {
-    console.log(personalityTraits);
     var uploadingPartition = document.getElementById("uploading-partition");
     var analysisPartition = document.getElementById("analysis-partition");
 
-    waitingContainer.style.display = "none";
-    uploadingContainer.style.display = "block";
     uploadingPartition.style.display = "none";
     analysisPartition.style.display = "block";
 
@@ -113,7 +117,8 @@ const uploadVideo = async () => {
     // var header2 = document.getElementById("header2");
     // header2.style.marginBottom = "0px";
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    alert("Could not display results. Check the console.");
   }
 };
 
