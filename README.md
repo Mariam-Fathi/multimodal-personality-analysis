@@ -26,13 +26,3 @@ Engineered an end-to-end multimodal AI system predicting Big Five personality tr
 | **Audio** | 0.0016 | 0.0013 | 0.0013 | 0.0012 | 0.0012 | 0.0013 |
 | **Text** | 0.0461 | 0.0511 | 0.0477 | 0.0460 | 0.0530 | 0.0489 |
 | **Fusion** | **0.1230** | **0.1339** | **0.1333** | **0.1227** | **0.1222** | **0.1270** |
-
-## 🚀 Setup
-
-1. **Install dependencies:** `npm install`
-2. **Environment:** Copy `.env.example` to `.env` and set:
-   - `MONGODB_URI` – MongoDB connection string
-   - `SESSION_SECRET` – long random string for session signing
-   - `JWT_KEY` – long random string for JWT signing
-3. **Python (for personality prediction):** The app calls `ML/Traits-Prediction.py` with the uploaded video path. A stub is included that returns placeholder scores. Replace it with your full ML pipeline. Ensure `python` (or `python3`) is on PATH, or set `PYTHON_PATH` in `.env`.
-4. **Run:** `npm run dev` or `npm start`
